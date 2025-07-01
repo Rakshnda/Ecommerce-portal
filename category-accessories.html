@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Accessories Collection</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .sidebar {
+      position: fixed;
+      top: 80px;
+      left: 0;
+      width: 200px;
+      background-color: #333;
+      padding: 25px 20px;
+      border-radius: 0 10px 10px 0;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      z-index: 1000;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar.show {
+      transform: translateX(0);
+    }
+
+    .sidebar h2 {
+      color: white;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      background-color: #444;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .sidebar a:hover {
+      background-color: #555;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .cart-button-container {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      z-index: 1100;
+    }
+
+    .cart-button {
+      background-color: #4f46e5;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-family: sans-serif;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .back-to-top {
+      display: none;
+      background-color: #4f46e5;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    .back-to-top.show {
+      display: inline-block;
+    }
+
+    .sidebar-toggle {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      background-color: #4f46e5;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1100;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cart Button -->
+  <div class="cart-button-container">
+    <a href="cart.html" class="cart-button">🛒 View Cart</a>
+  </div>
+
+  <!-- Sidebar Toggle Button -->
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Categories</button>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <span class="close-btn" onclick="toggleSidebar()">&times;</span>
+<h2>Categories</h2>
+<a href="index.html">🏠 Home</a>
+<a href="category-men.html">👕 Men</a>
+<a href="category-women.html">👗 Women</a>
+<a href="category-accessories.html">👜 Accessories</a>
+
+  </div>
+
+  <h1 style="text-align:center;">👜 Accessories Collection</h1>
+
+  <div class="product-container">
+    <div class="product">
+      <img src="assets/product21.jpg" alt="Layered Chains (W)" />
+      <h2>Layered Chains (W)</h2>
+      <p>₹399</p>
+      <button onclick="addToCart('Layered Chains (W)', 399)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product22.jpg" alt="Bangle Stack" />
+      <h2>Bangle Stack</h2>
+      <p>₹299</p>
+      <button onclick="addToCart('Bangle Stack', 299)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product23.jpg" alt="Rings Stack (W)" />
+      <h2>Rings Stack (W)</h2>
+      <p>₹499</p>
+      <button onclick="addToCart('Rings Stack (W)', 499)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product24.jpg" alt="Layered Chain (M)" />
+      <h2>Layered Chain (M)</h2>
+      <p>₹199</p>
+      <button onclick="addToCart('Layered Chain (M)', 199)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product25.jpg" alt="Leather Bracelet" />
+      <h2>Leather Bracelet</h2>
+      <p>₹199</p>
+      <button onclick="addToCart('Leather Bracelet', 199)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product26.jpg" alt="Rings Stack (M)" />
+      <h2>Rings Stack (M)</h2>
+      <p>₹199</p>
+      <button onclick="addToCart('Rings Stack (M)', 199)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product27.jpg" alt="Goggles" />
+      <h2>Goggles</h2>
+      <p>₹199</p>
+      <button onclick="addToCart('Goggles', 199)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product28.jpg" alt="Dice Keychain" />
+      <h2>Dice Keychain</h2>
+      <p>₹99</p>
+      <button onclick="addToCart('Dice Keychain', 99)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product29.jpg" alt="Blue Twilly" />
+      <h2>Blue Twilly</h2>
+      <p>₹99</p>
+      <button onclick="addToCart('Blue Twilly', 99)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product30.jpg" alt="Silk Printed Necktie" />
+      <h2>Silk Printed Necktie</h2>
+      <p>₹199</p>
+      <button onclick="addToCart('Silk Printed Necktie', 199)">Add to Cart</button>
+    </div>
+  </div>
+
+  <a href="#" class="back-to-top" id="backToTop">⬆️ Back to Top</a>
+
+  <script>
+    function addToCart(name, price) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+        existingItem.qty += 1;
+      } else {
+        cart.push({ name: name, price: price, qty: 1 });
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`${name} added to cart!`);
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("show");
+    }
+
+    const backToTopBtn = document.getElementById("backToTop");
+    window.addEventListener("scroll", () => {
+      backToTopBtn.classList.toggle("show", window.scrollY > 300);
+    });
+  </script>
+
+</body>
+</html>

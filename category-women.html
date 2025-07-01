@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Women's Collection</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .sidebar {
+      position: fixed;
+      top: 80px;
+      left: 0;
+      width: 200px;
+      background-color: #333;
+      padding: 25px 20px;
+      border-radius: 0 10px 10px 0;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      z-index: 1000;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar.show {
+      transform: translateX(0);
+    }
+
+    .sidebar h2 {
+      color: white;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      background-color: #444;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .sidebar a:hover {
+      background-color: #555;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .cart-button-container {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      z-index: 1100;
+    }
+
+    .cart-button {
+      background-color: #4f46e5;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-family: sans-serif;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .back-to-top {
+      display: none;
+      background-color: #4f46e5;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    .back-to-top.show {
+      display: inline-block;
+    }
+
+    .sidebar-toggle {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      background-color: #4f46e5;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1100;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cart Button -->
+  <div class="cart-button-container">
+    <a href="cart.html" class="cart-button">🛒 View Cart</a>
+  </div>
+
+  <!-- Sidebar Toggle Button -->
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Categories</button>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <span class="close-btn" onclick="toggleSidebar()">&times;</span>
+<h2>Categories</h2>
+<a href="index.html">🏠 Home</a>
+<a href="category-men.html">👕 Men</a>
+<a href="category-women.html">👗 Women</a>
+<a href="category-accessories.html">👜 Accessories</a>
+
+  </div>
+
+  <h1 style="text-align:center;">👗 Women's Collection</h1>
+
+  <div class="product-container">
+    <div class="product">
+      <img src="assets/product4.jpg" alt="Product 4" />
+      <h2>Resin Corset</h2>
+      <p>₹2099</p>
+      <button onclick="addToCart('Resin Corset', 2099)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product5.jpg" alt="Product 5" />
+      <h2>Embroidered Frock</h2>
+      <p>₹1399</p>
+      <button onclick="addToCart('Embroidered Frock', 1399)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product6.jpg" alt="Product 6" />
+      <h2>Tailored Set</h2>
+      <p>₹1199</p>
+      <button onclick="addToCart('Tailored Set', 1199)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product7.jpg" alt="Product 7" />
+      <h2>Oversized Sweatshirt</h2>
+      <p>₹799</p>
+      <button onclick="addToCart('Oversized Sweatshirt', 799)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product10.jpg" alt="Product 10" />
+      <h2>Tiered Skirt</h2>
+      <p>₹899</p>
+      <button onclick="addToCart('Tiered Skirt', 899)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product16.jpg" alt="Product 16" />
+      <h2>Flowy Top</h2>
+      <p>₹599</p>
+      <button onclick="addToCart('Flowy Top', 599)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product17.jpg" alt="Product 17" />
+      <h2>Crochet Top</h2>
+      <p>₹1099</p>
+      <button onclick="addToCart('Crochet Top', 1099)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product18.jpg" alt="Product 18" />
+      <h2>Baroque Shirt</h2>
+      <p>₹799</p>
+      <button onclick="addToCart('Baroque Shirt', 799)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product19.jpg" alt="Product 19" />
+      <h2>Grid Sweater</h2>
+      <p>₹1199</p>
+      <button onclick="addToCart('Grid Sweater', 1199)">Add to Cart</button>
+    </div>
+
+    <div class="product">
+      <img src="assets/product20.jpg" alt="Product 20" />
+      <h2>Solid Skirt</h2>
+      <p>₹699</p>
+      <button onclick="addToCart('Solid Skirt', 699)">Add to Cart</button>
+    </div>
+  </div>
+
+  <a href="#" class="back-to-top" id="backToTop">⬆️ Back to Top</a>
+
+  <script>
+    function addToCart(name, price) {
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existingItem = cart.find(item => item.name === name);
+      if (existingItem) {
+        existingItem.qty += 1;
+      } else {
+        cart.push({ name: name, price: price, qty: 1 });
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`${name} added to cart!`);
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      sidebar.classList.toggle("show");
+    }
+
+    const backToTopBtn = document.getElementById("backToTop");
+    window.addEventListener("scroll", () => {
+      backToTopBtn.classList.toggle("show", window.scrollY > 300);
+    });
+  </script>
+
+</body>
+</html>

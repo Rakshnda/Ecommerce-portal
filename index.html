@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Simple Store</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="cart-button-container">
+        <a href="cart.html" class="cart-button">🛒 View Cart</a>
+        <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Categories</button>
+    </div>
+
+    <div id="sidebar" class="sidebar">
+        <a href="javascript:void(0)" class="close-btn" onclick="toggleSidebar()">&times;</a>
+        <h2>Categories</h2>
+        <a href="index.html">🏠 Home</a>
+        <a href="category-men.html">👕 Men</a>
+        <a href="category-women.html">👗 Women</a>
+        <a href="category-accessories.html">👜 Accessories</a>
+    </div>
+
+    <h1>🏍️ Storefront</h1>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search products..." oninput="filterProducts()" />
+        <button id="micButton" onclick="recordAndSendAudio()">
+            <span id="micIcon">🎤</span> <span id="recordingStatus"></span>
+        </button>
+    </div>
+
+    <div class="product-container" id="productContainer"></div>
+
+    <a href="#" class="back-to-top" id="backToTop">⬆️ Back to Top</a>
+
+    <script>
+        const products = [
+            ["Embroidered Vest", 1799], ["Plaid Flannel", 599], ["Distressed Patchwork Denim", 1299],
+            ["Resin Corset", 2099], ["Embroidered Frock", 1399], ["Tailored Set", 1199],
+            ["Oversized Sweatshirt", 799], ["Embroidered Blazer", 1899], ["Paisley Shirt", 999],
+            ["Tiered Skirt", 899], ["Beige Trousers", 899], ["Plaid Trench Coat", 1399],
+            ["Ribbed Sweater", 799], ["Knitted Vest", 699], ["Cargo Jacket", 1299],
+            ["Flowy Top", 599], ["Crochet Top", 1099], ["Baroque Shirt", 799],
+            ["Grid Sweater", 1199], ["Solid Skirt", 699], ["Layered Chains (W)", 399],
+            ["Bangle Stack", 299],["Rings Stack (W)", 499], ["Layered Chain (M)", 199], ["Leather Bracelet", 199],
+            ["Rings Stack (M)", 199], ["Goggles", 199],
+            ["Dice Keychain", 99], ["Blue Twilly", 99], ["Silk Printed Necktie", 199]
+        ];
+
+        const container = document.getElementById("productContainer");
+        let currentPlayingAudio = null;
+
+        function displayProducts(filtered = products) {
+            container.innerHTML = '';
+            filtered.forEach((item) => {
+                const index = products.findIndex(p => p[0] === item[0]);
+                const productDiv = document.createElement("div");
+                productDiv.className = "product";
+                productDiv.innerHTML = `
+                    <img src="assets/product${index + 1}.jpg" alt="${item[0]}" />
+                    <h2>${item[0]}</h2>
+                    <p>₹${item[1]}</p>
+                    <div class="product-actions">
+                        <button onclick="addToCart('${item[0]}', ${item[1]})">Add to Cart</button>
+                        <button class="play-audio-btn" onclick="playProductAudio(${index})">
+                            <i class="fas fa-volume-up"></i> Listen
+                        </button>
+                    </div>
+                `;
+                container.appendChild(productDiv);
+            });
+        }
+
+        function playProductAudio(productIndex) {
+            // Audio paths now assume 'assets/audio/' is a direct subfolder
+            const audioPath = `assets/audio/product_audio_${productIndex}.mp3`;
+            const audio = new Audio(audioPath);
+
+            if (currentPlayingAudio) {
+                currentPlayingAudio.pause();
+                currentPlayingAudio.currentTime = 0;
+            }
+
+            audio.play()
+                .then(() => {
+                    currentPlayingAudio = audio;
+                    console.log(`Playing audio for product index ${productIndex}`);
+                })
+                .catch(error => {
+                    console.error(`Error playing audio for product index ${productIndex}:`, error);
+                    alert(`Could not play audio for "${products[productIndex][0]}". Make sure the audio file exists at ${audioPath}.`);
+                });
+
+            audio.onended = () => {
+                if (currentPlayingAudio === audio) {
+                    currentPlayingAudio = null;
+                }
+            };
+        }
+
+        function filterProducts() {
+            const query = document.getElementById("searchInput").value.toLowerCase();
+            const filtered = products.filter(p => p[0].toLowerCase().includes(query));
+            displayProducts(filtered);
+        }
+
+        function addToCart(name, price) {
+            const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+            const existing = cart.find(item => item.name === name);
+            if (existing) existing.qty += 1;
+            else cart.push({ name, price, qty: 1 });
+            localStorage.setItem("cart", JSON.stringify(cart));
+            alert(`${name} added to cart`);
+        }
+
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+
+        async function recordAndSendAudio() {
+            const micButton = document.getElementById("micButton");
+            const micIcon = document.getElementById("micIcon");
+            const recordingStatus = document.getElementById("recordingStatus");
+            const searchInput = document.getElementById("searchInput");
+
+            if (isRecording) {
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+                return;
+            }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = e => {
+                    audioChunks.push(e.data);
+                };
+
+                mediaRecorder.onstart = () => {
+                    isRecording = true;
+                    micIcon.textContent = '🔴';
+                    recordingStatus.textContent = 'Recording...';
+                    micButton.classList.add('recording-active');
+                    searchInput.value = '';
+                    filterProducts();
+                };
+
+                mediaRecorder.onstop = async () => {
+                    isRecording = false;
+                    micIcon.textContent = '🎤';
+                    recordingStatus.textContent = '';
+                    micButton.classList.remove('recording-active');
+                    micButton.disabled = false;
+
+                    if (audioChunks.length === 0) {
+                        alert("No audio recorded. Please ensure your microphone is working and you speak during the recording period.");
+                        return;
+                    }
+
+                    const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                    const formData = new FormData();
+                    formData.append('audio', blob, 'recording.webm');
+
+                    recordingStatus.textContent = 'Processing...';
+                    micButton.disabled = true;
+
+                    try {
+                        // Corrected Flask backend endpoint URL
+                        const response = await fetch('http://127.0.0.1:5000/transcribe', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            alert(`Error from server: ${errorData.error || 'Unknown error'}`);
+                            console.error('Server error response:', errorData);
+                            return;
+                        }
+
+                        const data = await response.json();
+                        if (data.text) {
+                            document.getElementById("searchInput").value = data.text;
+                            filterProducts();
+                        } else {
+                            alert(data.error || "Speech not recognized.");
+                        }
+                    } catch (fetchError) {
+                        console.error("Error sending audio to backend or processing response:", fetchError);
+                        alert("Error connecting to backend or processing speech recognition. Please ensure the backend server is running.");
+                    } finally {
+                        micButton.disabled = false;
+                        recordingStatus.textContent = '';
+                        if (stream) {
+                            stream.getTracks().forEach(track => track.stop());
+                        }
+                    }
+                };
+
+                mediaRecorder.start();
+            } catch (err) {
+                console.error("Microphone access error:", err);
+                alert("🎤 Microphone access denied or not available. Please ensure your microphone is connected and access is granted to this page.");
+                micIcon.textContent = '🎤';
+                recordingStatus.textContent = '';
+                isRecording = false;
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            sidebar.style.width = sidebar.style.width === "250px" ? "0" : "250px";
+        }
+
+        window.addEventListener("scroll", () => {
+            const backToTopButton = document.getElementById("backToTop");
+            if (backToTopButton) {
+                backToTopButton.classList.toggle("show", window.scrollY > 300);
+            }
+        });
+
+        window.onload = () => displayProducts();
+    </script>
+    <style>
+        /* Your existing CSS styles (assuming they are in style.css or embedded here) */
+        .search-container button {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            font-size: 1em;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-container button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .search-container button:active {
+            background-color: #d0d0d0;
+        }
+
+        .search-container button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        #micIcon {
+            margin-right: 5px;
+        }
+
+        #recordingStatus {
+            font-size: 0.9em;
+            color: #555;
+            min-width: 120px;
+            text-align: left;
+        }
+
+        .search-container button.recording-active {
+            background-color: #ffcccc;
+            border-color: #ff0000;
+            color: #ff0000;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .back-to-top {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.2em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: opacity 0.3s ease-in-out;
+            opacity: 0;
+        }
+
+        .back-to-top.show {
+            display: block;
+            opacity: 1;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .product-actions button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 8px 12px;
+            font-size: 0.9em;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .product-actions button:first-child {
+            margin-left: 0;
+        }
+
+        .product-actions button:last-child {
+            margin-right: 0;
+        }
+
+        .play-audio-btn {
+            background-color: #28a745;
+            color: white;
+            border: 1px solid #28a745;
+            transition: background-color 0.3s ease;
+        }
+
+        .play-audio-btn:hover {
+            background-color: #218838;
+        }
+
+        .play-audio-btn i {
+            margin-right: 5px;
+        }
+    </style>
+</body>
+</html>
